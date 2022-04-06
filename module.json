@@ -1,0 +1,51 @@
+{
+	"name": "pf1-weather",
+	"title": "Pathfinder 1E Weather",
+	"description": "Adds weather funcionality based on PF1's rules for weather.",
+	"version": "1.0.0",
+	"minimumCoreVersion": "0.8.8",
+	"compatibleCoreVersion": "9",
+	"system": "pf1",
+	"socket": true,
+	"authors": [
+		{
+			"name": "Νtriel#9341"
+		}
+	],
+	"styles": [
+		"css/pf1-weather.css"
+	],
+	"scripts": [
+		"js/Weather Macro.js"
+	],
+	"packs": [
+		{
+			"name": "pf1-weather-journals",
+			"label": "PF1 Weather Journals",
+			"system": "pf1",
+			"path": "./packs/pf1-weather-journals.db",
+			"entity": "JournalEntry"
+		},
+		{
+			"name": "weather-buffs",
+			"label": "PF1 Weather Buffs",
+			"system": "pf1",
+			"path": "./packs/weather-buffs.db",
+			"entity": "Item"
+		},
+		{
+			"name": "pf1-weather-macros",
+			"label": "PF1 Weather Macros",
+			"system": "pf1",
+			"path": "./packs/pf1-weather-macros.db",
+			"entity": "Macro"
+		}
+	],
+	"url": "https://github.com/ntriel/pf1-weather-macros",
+	"download": "https://github.com/ntriel/pf1-weather-macros/archive/v1.0.0.zip",
+	"manifest": "https://raw.githubusercontent.com/ntriel/pf1-weather-macros/main/module.json",
+	"readme": "https://github.com/ntriel/pf1-weather-macros/blob/main/README.md",
+	"changelog": "https://github.com/ntriel/pf1-weather-macros/blob/main/CHANGELOG.md",
+	"bugs": "https://github.com/ntriel/pf1-weather-macros/issues",
+	"allowBugReporter": false
+}

@@ -644,6 +644,7 @@ var pf1Weather = {
 	},
 	
 	CheckClimate: async function (){
+		
 		let content = `<form>
 				<select id="climateList">
 					<option value="Cold">Cold</option>
@@ -667,9 +668,13 @@ var pf1Weather = {
 			content: content, 
 			buttons : { OK : {label : `Ok`, callback : async (html) => { pf1Weather.WeatherRolls(html.find('#climateList').val(),html.find('#seasonList').val(),html.find('#elevationList').val())} } }
 		}).render(true);
+		
 	},
 
 	WeatherRolls: async function (climate, season, elevation){
+		game.user.setFlag("pf1-weather","climate",climate);
+		game.user.setFlag("pf1-weather","season",season);
+		game.user.setFlag("pf1-weather","elevation",elevation);
 		pf1Weather.theClimate = climate;
 		pf1Weather.theSeason = season;
 		pf1Weather.baselineTemp = pf1Weather.ClimateBaselines[climate][season];
@@ -834,3 +839,15 @@ var pf1Weather = {
 		}
 	}
 }
+
+Hooks.on("renderApplication", (dialog, html, data) => {
+	console.log("dialog",dialog);
+	if(dialog.data != null && dialog.data.title == "Weather"){
+		let climate = game.user.getFlag("pf1-weather","climate");
+		let season = game.user.getFlag("pf1-weather","season");
+		let elevation = game.user.getFlag("pf1-weather","elevation");
+		document.querySelector("#climateList").value = climate;
+		document.querySelector("#seasonList").value = season;
+		document.querySelector("#elevationList").value = elevation;
+	}
+});

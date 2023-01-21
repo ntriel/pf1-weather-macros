@@ -780,7 +780,7 @@ var pf1Weather = {
 		pack.index.forEach(template => journals.push({name: template.name,id: template._id}));
 		
 		everPercip ? WeatherMessage += `<br>@Compendium[pf1-weather.pf1-weather-journals.${journals.filter(journal => journal.name == "Precipitation Weather Rules")[0].id}]{Precipitation Weather Rules}` : console.log("No rules needed");
-		console.log(WeatherMessage);
+		//console.log(WeatherMessage);
 		
 		let chatData = {
 		   user: game.user.id,
@@ -841,7 +841,7 @@ var pf1Weather = {
 }
 
 Hooks.on("renderApplication", (dialog, html, data) => {
-	console.log("dialog",dialog);
+	//console.log("dialog",dialog);
 	if(dialog.data != null && dialog.data.title == "Weather"){
 		let climate = game.user.getFlag("pf1-weather","climate");
 		let season = game.user.getFlag("pf1-weather","season");

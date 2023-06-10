@@ -4,7 +4,7 @@
 	"description": "Adds weather funcionality based on PF1's rules for weather.  Can be used with SimpleCalendar to add weather reports as notes on the calendar using a button in the side panel.",
 	"version": "1.0.4",
 	"minimumCoreVersion": "0.8.8",
-	"compatibleCoreVersion": "9",
+	"compatibleCoreVersion": "10",
 	"system": "pf1",
 	"socket": true,
 	"authors": [

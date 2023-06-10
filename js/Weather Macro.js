@@ -857,8 +857,6 @@ var pf1Weather = {
 		}
 	},
 
-	
-
 	GetWindData: async function (){
 		let roll = await pf1Weather.RollDie("1d100");
 		for(let key of Object.keys(pf1Weather.WindData)){
@@ -1021,6 +1019,43 @@ var pf1Weather = {
 		};
 		ChatMessage.create(chatData, {});*/
 		
+	},
+
+	RemoveCurrentAndFutureWeatherReports: async function (){
+		pf1Weather.RemoveCurrentWeatherReport();
+		pf1Weather.RemoveFutureWeatherReports();
+	},
+	
+	RemoveCurrentWeatherReport: async function (){
+		let notes = SimpleCalendar.api.searchNotes("Weather Report").filter(entry => pf1Weather.isDate(entry, SimpleCalendar.api.currentDateTime().year, SimpleCalendar.api.currentDateTime().month, SimpleCalendar.api.currentDateTime().day));
+		for(let note of notes){
+			SimpleCalendar.api.removeNote(note["_id"]);
+		}
+	},
+	
+	RemoveFutureWeatherReports: async function (){
+		let notes = SimpleCalendar.api.searchNotes("Weather Report").filter(entry => pf1Weather.isAfterDate(entry, SimpleCalendar.api.currentDateTime().year, SimpleCalendar.api.currentDateTime().month, SimpleCalendar.api.currentDateTime().day));
+		for(let note of notes){
+			SimpleCalendar.api.removeNote(note["_id"]);
+		}
+	},
+	
+	isEqualOrAfterDate: function (entry, compYear, compMonth, compDay){
+		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
+		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
+		return entryDate >= compDate;
+	},
+	
+	isAfterDate: function (entry, compYear, compMonth, compDay){
+		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
+		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
+		return entryDate > compDate;
+	},
+	
+	isDate: function (entry, compYear, compMonth, compDay){
+		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
+		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
+		return entryDate == compDate;
 	}
 }
 
@@ -1040,5 +1075,7 @@ Hooks.on("renderApplication", (dialog, html, data) => {
 Hooks.once("renderApplication", () =>{
 	if(SimpleCalendar != null){
 		SimpleCalendar.api.addSidebarButton("Roll PF1 Weather", "fa-solid fa-cloud", "pf1-weather-class", false, pf1Weather.Main_SimpleCalendar);
+		SimpleCalendar.api.addSidebarButton("Remove Todays Weather Report", "fa-solid fa-cloud-slash", "pf1-weather-class", false, pf1Weather.RemoveCurrentWeatherReport);
+		SimpleCalendar.api.addSidebarButton("Remove All Future Weather Reports", "fa-solid fa-cloud-xmark", "pf1-weather-class", false, pf1Weather.RemoveFutureWeatherReports);
 	}
 })

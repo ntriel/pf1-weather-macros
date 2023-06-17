@@ -1056,6 +1056,49 @@ var pf1Weather = {
 		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
 		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
 		return entryDate == compDate;
+	},
+	
+	OutputCurrentWeatherToWhisper: function(){
+		let notes = SimpleCalendar.api.searchNotes("Weather Report");
+		let note = notes.filter(x => x.flags["foundryvtt-simple-calendar"].noteData.startDate.year == SimpleCalendar.api.currentDateTime().year && x.flags["foundryvtt-simple-calendar"].noteData.startDate.month == SimpleCalendar.api.currentDateTime().month && x.flags["foundryvtt-simple-calendar"].noteData.startDate.day == SimpleCalendar.api.currentDateTime().day);
+		if(note.length >= 1){
+			let messageData = "";
+			for(theNote of note){
+				messageData += theNote.pages.contents[0].text.content;
+			}
+			let chatData = {
+			   user: game.user.id,
+			   speaker: {
+				  alias: "Weather Report"
+			   },
+			   content: messageData,
+			   whisper: ChatMessage.getWhisperRecipients("Gamemaster")
+			};
+			ChatMessage.create(chatData, {});
+		}else{
+			ui.notifications.error("No Weather Report today to output to chat.");
+		}
+	},
+	
+	OutputCurrentWeatherToChat: function(){
+		let notes = SimpleCalendar.api.searchNotes("Weather Report");
+		let note = notes.filter(x => x.flags["foundryvtt-simple-calendar"].noteData.startDate.year == SimpleCalendar.api.currentDateTime().year && x.flags["foundryvtt-simple-calendar"].noteData.startDate.month == SimpleCalendar.api.currentDateTime().month && x.flags["foundryvtt-simple-calendar"].noteData.startDate.day == SimpleCalendar.api.currentDateTime().day);
+		if(note.length >= 1){
+			let messageData = "";
+			for(theNote of note){
+				messageData += theNote.pages.contents[0].text.content;
+			}
+			let chatData = {
+			   user: game.user.id,
+			   speaker: {
+				  alias: "Weather Report"
+			   },
+			   content: messageData
+			};
+			ChatMessage.create(chatData, {});
+		}else{
+			ui.notifications.error("No Weather Report today to output to chat.");
+		}
 	}
 }
 
@@ -1077,5 +1120,7 @@ Hooks.once("renderApplication", () =>{
 		SimpleCalendar.api.addSidebarButton("Roll PF1 Weather", "fa-solid fa-cloud", "pf1-weather-class", false, pf1Weather.Main_SimpleCalendar);
 		SimpleCalendar.api.addSidebarButton("Remove Todays Weather Report", "fa-solid fa-cloud-slash", "pf1-weather-class", false, pf1Weather.RemoveCurrentWeatherReport);
 		SimpleCalendar.api.addSidebarButton("Remove All Future Weather Reports", "fa-solid fa-cloud-xmark", "pf1-weather-class", false, pf1Weather.RemoveFutureWeatherReports);
+		SimpleCalendar.api.addSidebarButton("Output Today's Weather to Chat", "fa-regular fa-message-lines", "pf1-weather-class", false, pf1Weather.OutputCurrentWeatherToChat);
+		SimpleCalendar.api.addSidebarButton("Whisper Today's Weather to GM", "fa-regular fa-message-dots", "pf1-weather-class", false, pf1Weather.OutputCurrentWeatherToWhisper);
 	}
 })

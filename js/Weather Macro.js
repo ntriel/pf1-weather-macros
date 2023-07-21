@@ -1117,10 +1117,84 @@ Hooks.on("renderApplication", (dialog, html, data) => {
 // Adding a button that will generate weather reports into SimpleCalendar when clicked
 Hooks.once("renderApplication", () =>{
 	if(SimpleCalendar != null){
-		SimpleCalendar.api.addSidebarButton("Roll PF1 Weather", "fa-solid fa-cloud", "pf1-weather-class", false, pf1Weather.Main_SimpleCalendar);
-		SimpleCalendar.api.addSidebarButton("Remove Todays Weather Report", "fa-solid fa-cloud-slash", "pf1-weather-class", false, pf1Weather.RemoveCurrentWeatherReport);
-		SimpleCalendar.api.addSidebarButton("Remove All Future Weather Reports", "fa-solid fa-cloud-xmark", "pf1-weather-class", false, pf1Weather.RemoveFutureWeatherReports);
-		SimpleCalendar.api.addSidebarButton("Output Today's Weather to Chat", "fa-regular fa-message-lines", "pf1-weather-class", false, pf1Weather.OutputCurrentWeatherToChat);
-		SimpleCalendar.api.addSidebarButton("Whisper Today's Weather to GM", "fa-regular fa-message-dots", "pf1-weather-class", false, pf1Weather.OutputCurrentWeatherToWhisper);
+		// Adding a button that should show a side panel
+		SimpleCalendar.api.addSidebarButton("PF1 Weather", "fa-solid fa-cloud", "pf1-weather-panel-class", true, populateSidePanel);
+		
 	}
 })
+
+// Function to call to populate the side panel
+function populateSidePanel(event, element){
+    if(element){
+		let prevClimate = game.user.getFlag("pf1-weather","climate");
+		let prevSeason = game.user.getFlag("pf1-weather","season");
+		let prevElevation = game.user.getFlag("pf1-weather","elevation");
+		
+		
+		const header = document.createElement('h2');
+		header.innerText = "PF1 Weather";
+		element.append(header);
+	   
+		let seasons = SimpleCalendar.api.getAllSeasons().map(x => x.name);
+		let curSeason = SimpleCalendar.api.getCurrentSeason().name;
+		let formElement = document.createElement("form");
+		
+		let climateSelect = document.createElement("select");
+		climateSelect.id = "climateList-SC";
+		let coldOption = document.createElement("option");
+		coldOption.value = "Cold";
+		coldOption.innerText = "Cold";
+		climateSelect.appendChild(coldOption);
+		let tempOption = document.createElement("option");
+		tempOption.value = "Temperate";
+		tempOption.innerText = "Temperate";
+		climateSelect.appendChild(tempOption);
+		let tropOption = document.createElement("option");
+		tropOption.value = "Tropical";
+		tropOption.innerText = "Tropical";
+		climateSelect.appendChild(tropOption);
+		climateSelect.value = prevClimate;
+		formElement.appendChild(climateSelect);
+		
+		let seasonSelect = document.createElement("select");
+		seasonSelect.id = "seasonList-SC";
+		for(let season of seasons){
+			let optionElement = document.createElement("option");
+			optionElement.value = season;
+			optionElement.innerText = season;
+			seasonSelect.appendChild(optionElement);
+		}
+		seasonSelect.value = curSeason;
+		formElement.appendChild(seasonSelect);
+		
+		let elevationSelect = document.createElement("select");
+		elevationSelect.id = "elevationList-SC";
+		let seaOpt = document.createElement("option");
+		seaOpt.value = "Sea level";
+		seaOpt.innerText = "Sea level(Below 1,000 ft.)";
+		elevationSelect.appendChild(seaOpt);
+		let lowOpt = document.createElement("option");
+		lowOpt.value = "Lowland";
+		lowOpt.innerText = "Lowland (1,000 ft. to 5,000 ft.)";
+		elevationSelect.appendChild(lowOpt);
+		let highOp = document.createElement("option");
+		highOp.value = "Highland";
+		highOp.innerText = "Highland (Above 5,000 ft.)";
+		elevationSelect.appendChild(highOp);
+		elevationSelect.value = prevElevation;
+		formElement.appendChild(elevationSelect);
+		
+		element.append(formElement);
+		let buttons = document.createElement("div");
+		//I did all the nonsense above then realized I could have done it this way from the begining... decided it didn't need to be changed above.
+		buttons.innerHTML = `
+			<button id='pf1-weather-roll' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.SimpleCalendarWeatherRolls(document.querySelector('#climateList-SC').value,document.querySelector('#seasonList-SC').value,document.querySelector('#elevationList-SC').value)">Roll Weather</button>
+			<button id='pf1-weather-rem-today' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.RemoveCurrentWeatherReport()">Remove Todays Weather Report</button>
+			<button id='pf1-weather-rem-fut' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.RemoveFutureWeatherReports()">Remove All Future Weather Reports</button>
+			<button id='pf1-weather-to-chat' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.OutputCurrentWeatherToChat()">Output Today's Weather to Chat</button>
+			<button id='pf1-weather-to-gm' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.OutputCurrentWeatherToWhisper()">Whisper Today's Weather to GM</button>
+		`;
+		
+		element.append(buttons);
+	}
+}

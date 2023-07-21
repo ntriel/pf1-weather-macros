@@ -1,4 +1,4 @@
-# v1.0.5
+# v1.0.6
 Updated to work for Foundry V11, replaced Simple Calendar side buttons with a panel that holds the dropdowns for weather rolls, season is now set based off what season Simple Calendar is set to (Will more than likely cause issue if a custom season is used in SC).
 # v1.0.4
 Added buttons to SimpleCalendar that remove current day weather report and one to remove all future weather reports.

@@ -2,9 +2,7 @@
 	"name": "pf1-weather",
 	"title": "Pathfinder 1E Weather",
 	"description": "Adds weather funcionality based on PF1's rules for weather.  Can be used with SimpleCalendar to add weather reports as notes on the calendar using a button in the side panel.",
-	"version": "1.0.5",
-	"minimumCoreVersion": "0.8.8",
-	"compatibleCoreVersion": "10",
+	"version": "1.0.6",
 	"system": "pf1",
 	"socket": true,
 	"authors": [
@@ -24,25 +22,38 @@
 			"label": "PF1 Weather Journals",
 			"system": "pf1",
 			"path": "./packs/pf1-weather-journals.db",
-			"entity": "JournalEntry"
+			"type": "JournalEntry"
 		},
 		{
 			"name": "weather-buffs",
 			"label": "PF1 Weather Buffs",
 			"system": "pf1",
 			"path": "./packs/weather-buffs.db",
-			"entity": "Item"
+			"type": "Item"
 		},
 		{
 			"name": "pf1-weather-macros",
 			"label": "PF1 Weather Macros",
 			"system": "pf1",
 			"path": "./packs/pf1-weather-macros.db",
-			"entity": "Macro"
+			"type": "Macro"
+		}
+	],
+	"compatibility": {
+		"minimum": 10,
+		"verified": "11",
+		"maximum": "11"
+	},
+	"packFolders": [
+		{
+			"name": "Pathfinder Weather Packs",
+			"sorting": "a",
+			"packs": ["pf1-weather-journals", "weather-buffs", "pf1-weather-macros"],
+			"folders": []
 		}
 	],
 	"url": "https://github.com/ntriel/pf1-weather-macros",
-	"download": "https://github.com/ntriel/pf1-weather-macros/archive/v1.0.5.zip",
+	"download": "https://github.com/ntriel/pf1-weather-macros/archive/v1.0.6.zip",
 	"manifest": "https://raw.githubusercontent.com/ntriel/pf1-weather-macros/main/module.json",
 	"readme": "https://github.com/ntriel/pf1-weather-macros/blob/main/README.md",
 	"changelog": "https://github.com/ntriel/pf1-weather-macros/blob/main/CHANGELOG.md",

@@ -1118,8 +1118,9 @@ Hooks.on("renderApplication", (dialog, html, data) => {
 Hooks.once("renderApplication", () =>{
 	if(SimpleCalendar != null){
 		// Adding a button that should show a side panel
-		SimpleCalendar.api.addSidebarButton("PF1 Weather", "fa-solid fa-cloud", "pf1-weather-panel-class", true, populateSidePanel);
-		
+		if(game.user.isGM){
+			SimpleCalendar.api.addSidebarButton("PF1 Weather", "fa-solid fa-cloud", "pf1-weather-panel-class", true, populateSidePanel);
+		}
 	}
 })
 

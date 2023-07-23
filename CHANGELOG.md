@@ -1,3 +1,5 @@
+# v1.0.7
+Added check that user was GM before rendering Simple Calendar Side Panel, changed system definition in manifest json to remove warning from foundry vtt.
 # v1.0.6
 Updated to work for Foundry V11, replaced Simple Calendar side buttons with a panel that holds the dropdowns for weather rolls, season is now set based off what season Simple Calendar is set to (Will more than likely cause issue if a custom season is used in SC).
 # v1.0.4

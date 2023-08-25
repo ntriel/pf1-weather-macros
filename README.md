@@ -1,6 +1,7 @@
 # pf1-weather-macros
 Added macros with functionality to follow PF1's weather rules found at:<br>
 https://www.d20pfsrd.com/gamemastering/environment/weather/
+Manifest URL: https://raw.githubusercontent.com/ntriel/pf1-weather-macros/main/module.json
 
 # v1.0.7 UPDATE
 Added check that user was GM before rendering Simple Calendar Side Panel, changed system definition in manifest json to remove warning from foundry vtt.

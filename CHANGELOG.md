@@ -1,3 +1,6 @@
+# v1.0.8 UPDATE
+Fixed major issue where dates were being done incorrectly causing issues with creating and deleting notes from simple calendar.
+
 # v1.0.7
 Added check that user was GM before rendering Simple Calendar Side Panel, changed system definition in manifest json to remove warning from foundry vtt.
 # v1.0.6

@@ -987,21 +987,16 @@ var pf1Weather = {
 			let journals = [];
 			pack.index.forEach(template => journals.push({name: template.name,id: template._id}));
 			everPercip ? WeatherMessage += `<br>@Compendium[pf1-weather.pf1-weather-journals.${journals.filter(journal => journal.name == "Precipitation Weather Rules")[0].id}]{Precipitation Weather Rules}` : console.log("No rules needed");
-			const newJournal = await SimpleCalendar.api.addNote('Weather Report', WeatherMessage, {
+			let theDate = pf1Weather.GetDateForNote({
 				year: (SimpleCalendar.api.getCurrentYear().numericRepresentation),
 				month: (SimpleCalendar.api.getCurrentMonth().numericRepresentation-1),
-				day: (day-1),
+				day: day-1,
 				hour: 0,
 				minute: 0,
 				seconds: 0
-			}, {
-				year: (SimpleCalendar.api.getCurrentYear().numericRepresentation),
-				month: (SimpleCalendar.api.getCurrentMonth().numericRepresentation-1),
-				day: (day-1),
-				hour: 0,
-				minute: 0,
-				seconds: 0
-			}, true, SimpleCalendar.api.NoteRepeat.Never, ['Weather Report']);
+			});
+			
+			const newJournal = await SimpleCalendar.api.addNote('Weather Report', WeatherMessage, theDate, theDate, true, SimpleCalendar.api.NoteRepeat.Never, ['Weather Report']);
 			console.log(newJournal);
 		}
 		
@@ -1020,6 +1015,35 @@ var pf1Weather = {
 		ChatMessage.create(chatData, {});*/
 		
 	},
+	
+	GetDateForNote: function (date) {
+		console.log("Before: ", date);
+		let year = date.year;
+		let month = date.month;
+		let day = date.day;
+		if(day > SimpleCalendar.api.getCurrentMonth().numberOfDays - 1){
+			date = {
+				year: year,
+				month: month+1,
+				day: day - SimpleCalendar.api.getCurrentMonth().numberOfDays,
+				hour: 0,
+				minute: 0,
+				seconds: 0
+			};
+			if(month+1 > SimpleCalendar.api.getCurrentCalendar().months.length-1){
+				date = {
+					year: year+1,
+					month: 0,
+					day: day - SimpleCalendar.api.getCurrentMonth().numberOfDays,
+					hour: 0,
+					minute: 0,
+					seconds: 0
+				}
+			}
+		}
+		console.log("After: ", date);
+		return date;
+	},
 
 	RemoveCurrentAndFutureWeatherReports: async function (){
 		pf1Weather.RemoveCurrentWeatherReport();
@@ -1027,34 +1051,47 @@ var pf1Weather = {
 	},
 	
 	RemoveCurrentWeatherReport: async function (){
-		let notes = SimpleCalendar.api.searchNotes("Weather Report").filter(entry => pf1Weather.isDate(entry, SimpleCalendar.api.currentDateTime().year, SimpleCalendar.api.currentDateTime().month, SimpleCalendar.api.currentDateTime().day));
+		let notes = SimpleCalendar.api.searchNotes("Weather Report").filter(entry => pf1Weather.isDate(entry, SimpleCalendar.api.getCurrentYear().numericRepresentation, SimpleCalendar.api.getCurrentMonth().numericRepresentation - 1, SimpleCalendar.api.getCurrentDay().numericRepresentation - 1));
 		for(let note of notes){
 			SimpleCalendar.api.removeNote(note["_id"]);
 		}
 	},
 	
 	RemoveFutureWeatherReports: async function (){
-		let notes = SimpleCalendar.api.searchNotes("Weather Report").filter(entry => pf1Weather.isAfterDate(entry, SimpleCalendar.api.currentDateTime().year, SimpleCalendar.api.currentDateTime().month, SimpleCalendar.api.currentDateTime().day));
+		let notes = SimpleCalendar.api.searchNotes("Weather Report").filter(entry => pf1Weather.isAfterDate(entry, SimpleCalendar.api.getCurrentYear().numericRepresentation, SimpleCalendar.api.getCurrentMonth().numericRepresentation - 1, SimpleCalendar.api.getCurrentDay().numericRepresentation - 1));
+		for(let note of notes){
+			SimpleCalendar.api.removeNote(note["_id"]);
+		}
+	},
+	
+	RemoveAllWeatherReports: async function (){
+		let notes = SimpleCalendar.api.searchNotes("Weather Report");
 		for(let note of notes){
 			SimpleCalendar.api.removeNote(note["_id"]);
 		}
 	},
 	
 	isEqualOrAfterDate: function (entry, compYear, compMonth, compDay){
-		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
-		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
+		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + 1) + "-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day + 1)).getTime();
+		let compDate = new Date(compYear + "-" + (compMonth + 1) + "-" + (compDay + 1)).getTime();
+		console.log(entry.flags["foundryvtt-simple-calendar"].noteData.startDate);
+		console.log(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + 1) + "-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day + 1));
+		console.log("Entry Date: " + entryDate + "\nComp Date: " + compDate);
 		return entryDate >= compDate;
 	},
 	
 	isAfterDate: function (entry, compYear, compMonth, compDay){
-		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
-		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
+		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + 1) + "-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day + 1)).getTime();
+		let compDate = new Date(compYear + "-" + (compMonth + 1) + "-" + (compDay + 1)).getTime();
+		console.log(entry.flags["foundryvtt-simple-calendar"].noteData.startDate);
+		console.log(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + 1) + "-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day + 1));
+		console.log("Entry Date: " + entryDate + "\nComp Date: " + compDate);
 		return entryDate > compDate;
 	},
 	
 	isDate: function (entry, compYear, compMonth, compDay){
-		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + "-" + entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day).getTime();
-		let compDate = new Date(compYear + "-" + compMonth + "-" + compDay).getTime();
+		let entryDate = new Date(entry.flags["foundryvtt-simple-calendar"].noteData.startDate.year +"-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.month + 1) + "-" + (entry.flags["foundryvtt-simple-calendar"].noteData.startDate.day + 1)).getTime();
+		let compDate = new Date(compYear + "-" + (compMonth + 1) + "-" + (compDay + 1)).getTime();
 		return entryDate == compDate;
 	},
 	
@@ -1126,6 +1163,9 @@ Hooks.once("renderApplication", () =>{
 
 // Function to call to populate the side panel
 function populateSidePanel(event, element){
+	for(let i = element.children.length-1; i > -1; i--){
+		element.removeChild(element.children[i]);
+	}
     if(element){
 		let prevClimate = game.user.getFlag("pf1-weather","climate");
 		let prevSeason = game.user.getFlag("pf1-weather","season");
@@ -1135,6 +1175,10 @@ function populateSidePanel(event, element){
 		const header = document.createElement('h2');
 		header.innerText = "PF1 Weather";
 		element.append(header);
+		
+		let dateHeader = document.createElement('h3');
+		dateHeader.innerText = `Current Date: ${SimpleCalendar.api.currentDateTimeDisplay().date}`;
+		element.append(dateHeader);
 	   
 		let seasons = SimpleCalendar.api.getAllSeasons().map(x => x.name);
 		let curSeason = SimpleCalendar.api.getCurrentSeason().name;
@@ -1192,6 +1236,7 @@ function populateSidePanel(event, element){
 			<button id='pf1-weather-roll' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.SimpleCalendarWeatherRolls(document.querySelector('#climateList-SC').value,document.querySelector('#seasonList-SC').value,document.querySelector('#elevationList-SC').value)">Roll Weather</button>
 			<button id='pf1-weather-rem-today' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.RemoveCurrentWeatherReport()">Remove Todays Weather Report</button>
 			<button id='pf1-weather-rem-fut' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.RemoveFutureWeatherReports()">Remove All Future Weather Reports</button>
+			<button id='pf1-weather-rem-fut' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.RemoveCurrentAndFutureWeatherReports()">Remove Today's and All Future Weather Reports</button>
 			<button id='pf1-weather-to-chat' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.OutputCurrentWeatherToChat()">Output Today's Weather to Chat</button>
 			<button id='pf1-weather-to-gm' class='fsc-xb fsc-kf fsc-lf pf1-weather-button' onclick="pf1Weather.OutputCurrentWeatherToWhisper()">Whisper Today's Weather to GM</button>
 		`;

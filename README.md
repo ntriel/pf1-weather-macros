@@ -3,6 +3,9 @@ Added macros with functionality to follow PF1's weather rules found at:<br>
 https://www.d20pfsrd.com/gamemastering/environment/weather/ <br>
 Manifest URL: https://raw.githubusercontent.com/ntriel/pf1-weather-macros/main/module.json
 
+# v1.0.8 UPDATE
+Fixed major issue where dates were being done incorrectly causing issues with creating and deleting notes from simple calendar.
+
 # v1.0.7 UPDATE
 Added check that user was GM before rendering Simple Calendar Side Panel, changed system definition in manifest json to remove warning from foundry vtt.
 

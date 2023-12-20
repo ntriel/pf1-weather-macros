@@ -3,6 +3,9 @@ Added macros with functionality to follow PF1's weather rules found at:<br>
 https://www.d20pfsrd.com/gamemastering/environment/weather/ <br>
 Manifest URL: https://raw.githubusercontent.com/ntriel/pf1-weather-macros/main/module.json
 
+# v1.0.9 UPDATE
+Fixed issue where whispering message to GM didn't work if GM wasn't named "Gamemaster"
+
 # v1.0.8 UPDATE
 Fixed major issue where dates were being done incorrectly causing issues with creating and deleting notes from simple calendar.
 

@@ -1109,7 +1109,7 @@ var pf1Weather = {
 				  alias: "Weather Report"
 			   },
 			   content: messageData,
-			   whisper: ChatMessage.getWhisperRecipients("Gamemaster")
+			   whisper: game.users.filter(x => x.isGM).map(x => x.id)
 			};
 			ChatMessage.create(chatData, {});
 		}else{

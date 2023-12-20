@@ -1,3 +1,6 @@
+# v1.0.9 UPDATE
+Fixed issue with whispering weather to GM.
+
 # v1.0.8 UPDATE
 Fixed major issue where dates were being done incorrectly causing issues with creating and deleting notes from simple calendar.
 

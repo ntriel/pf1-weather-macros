@@ -819,7 +819,9 @@ var pf1Weather = {
 		
 		everPercip ? WeatherMessage += `<br>@Compendium[pf1-weather.pf1-weather-journals.${journals.filter(journal => journal.name == "Precipitation Weather Rules")[0].id}]{Precipitation Weather Rules}` : console.log("No rules needed");
 		//console.log(WeatherMessage);
-		
+		if(game.system.gridUnits == "m"){
+			WeatherMessage = WeatherMessage.replaceAll(theTemp + "° F", Math.floor((theTemp - 32) * 5 / 9) + "° C");
+		}
 		let chatData = {
 		   user: game.user.id,
 		   speaker: {
@@ -995,7 +997,9 @@ var pf1Weather = {
 				minute: 0,
 				seconds: 0
 			});
-			
+			if(game.system.gridUnits == "m"){
+				WeatherMessage = WeatherMessage.replaceAll(theTemp + "° F", Math.floor((theTemp - 32) * 5 / 9) + "° C");
+			}
 			const newJournal = await SimpleCalendar.api.addNote('Weather Report', WeatherMessage, theDate, theDate, true, SimpleCalendar.api.NoteRepeat.Never, ['Weather Report']);
 			console.log(newJournal);
 		}

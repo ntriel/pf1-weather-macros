@@ -673,6 +673,10 @@ var pf1Weather = {
 					<option value="Highland">Highland (Above 5,000 ft.)</option>
 				</select>
 			</form>`;
+		if(game.system.gridUnits != "ft"){
+			content = content.replaceAll("1,000 ft.","305 m.");
+			content = content.replaceAll("5,000 ft.","1524 m.");
+		}
 		new Dialog({
 			title: "Weather",
 			content: content, 
@@ -1220,15 +1224,15 @@ function populateSidePanel(event, element){
 		elevationSelect.id = "elevationList-SC";
 		let seaOpt = document.createElement("option");
 		seaOpt.value = "Sea level";
-		seaOpt.innerText = "Sea level(Below 1,000 ft.)";
+		seaOpt.innerText = "Sea level(Below " + (game.system.gridUnits == "ft" ? "1,000 ft." : "305 m.") + ")";
 		elevationSelect.appendChild(seaOpt);
 		let lowOpt = document.createElement("option");
 		lowOpt.value = "Lowland";
-		lowOpt.innerText = "Lowland (1,000 ft. to 5,000 ft.)";
+		lowOpt.innerText = "Lowland (" + (game.system.gridUnits == "ft" ? "1,000 ft." : "305 m.") + " to " + (game.system.gridUnits == "ft" ? "5,000 ft." : "1524 m.") + ")";
 		elevationSelect.appendChild(lowOpt);
 		let highOp = document.createElement("option");
 		highOp.value = "Highland";
-		highOp.innerText = "Highland (Above 5,000 ft.)";
+		highOp.innerText = "Highland (Above " + (game.system.gridUnits == "ft" ? "5,000 ft." : "1524 m.") + ")";
 		elevationSelect.appendChild(highOp);
 		elevationSelect.value = prevElevation;
 		formElement.appendChild(elevationSelect);
